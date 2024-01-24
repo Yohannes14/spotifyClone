@@ -1,15 +1,15 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
+import { FlatList, StyleSheet } from 'react-native';
 import { Text, View } from '@/components/Themed';
+import { tracks } from "../../assets/data/tracks"
+import TrackListItem from '@/components/TrackListItem';
 
-export default function TabOneScreen() {
+export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
+      <FlatList
+        data={tracks}
+        renderItem={({ item }) => <TrackListItem track={item} />}
+        showsVerticalScrollIndicator={false}
+      />
   );
 }
 
@@ -19,13 +19,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+
 });
