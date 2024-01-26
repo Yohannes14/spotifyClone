@@ -12,7 +12,7 @@ const TrackListItem = ({ track }: TrackListItemProps) => {
                 source={{ uri: track.album.images[0]?.url }}
                 style={styles.image}
             />
-            <View>
+            <View style={{flex:1}}>
                 <Text style={styles.title}>{track.name}</Text>
                 <Text style={styles.subtilte}>{track.artists[0]?.name}</Text>
             </View>
