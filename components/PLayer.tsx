@@ -1,9 +1,60 @@
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { usePlayerContext } from '@/providers/PlayerProvider';
+import { AVPlaybackStatus, Audio } from "expo-av";
+import { Sound } from 'expo-av/build/Audio';
+
 
 const Player = () => {
+    const [sound, setSound] = useState<Sound>()
+    const [isPlaying, seIsPlaying] = useState(false);
     const { track } = usePlayerContext();
+
+    useEffect(() => {
+        if (track) {
+            playTrack();
+        }
+    }, [track])
+    useEffect(() => {
+        return sound ? () => {
+            sound.unloadAsync()
+        } : undefined
+    }, [sound])
+
+    const playTrack = async () => {
+        if (sound) {
+            await sound.unloadAsync();
+        }
+        if (!track?.preview_url) {
+            return;
+        }
+        const { sound: newSound } = await Audio.Sound.createAsync({
+            uri: track?.preview_url
+        },
+            { shouldPlay: true },
+        );
+        setSound(newSound);
+        newSound.setOnPlaybackStatusUpdate(OnPlayBackStatusUpdate)
+        await newSound.playAsync();
+
+    }
+
+    const OnPlayBackStatusUpdate = (status: AVPlaybackStatus) => {
+        if (!status.isLoaded) {
+            return
+        }
+        seIsPlaying(status?.isPlaying)
+    }
+    const onPlayPause = async () => {
+        if (!sound) { return };
+        if (isPlaying) {
+            await sound.pauseAsync();
+        } else {
+            await sound.playAsync();
+        }
+
+    }
     if (!track) {
         return null;
     }
@@ -24,9 +75,9 @@ const Player = () => {
                     color={'white'}
                     style={{ marginHorizontal: 10 }}
                 />
-                <Ionicons
+                <Ionicons onPress={onPlayPause}
                     disabled={!track?.preview_url}
-                    name={'play'}
+                    name={isPlaying ? 'pause' : 'play'}
                     size={22}
                     color={track?.preview_url ? 'white' : 'gray'}
                 />
