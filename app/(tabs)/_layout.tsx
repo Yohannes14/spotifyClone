@@ -5,7 +5,6 @@ import { Pressable, Text, View } from 'react-native';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { BottomTabBar } from '@react-navigation/bottom-tabs';
 import Player from '@/components/PLayer';
 
@@ -24,7 +23,6 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        //headerShown: useClientOnlyValue(false, true),
       }}
       tabBar={(props) => (
         <View>
